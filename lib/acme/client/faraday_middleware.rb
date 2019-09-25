@@ -41,7 +41,8 @@ class Acme::Client::FaradayMiddleware < Faraday::Middleware
   private
 
   def jws_header
-    headers = { nonce: pop_nonce, url: env.url.to_s }
+    url = env.url.to_s.gsub /letsencrypt\.org\//, "letsencrypt.org:#{url.default_port}/"
+    headers = { nonce: pop_nonce, url: url }
     headers[:kid] = client.kid if @mode == :kid
     headers
   end
